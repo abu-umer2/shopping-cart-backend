@@ -29,8 +29,8 @@ export class CategoriesService {
     return this.categoryModel.findById(id).populate('subCategories').exec();
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  update(id: string, updateCategoryDto: UpdateCategoryDto) {
+    return this.categoryModel.findByIdAndUpdate(id,updateCategoryDto,{ new: true })
   }
 
   remove(id: number) {

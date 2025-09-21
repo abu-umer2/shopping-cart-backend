@@ -7,16 +7,33 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CategoriesModule } from './categories/categories.module';
 import { SubCategoriesModule } from './sub-categories/sub-categories.module';
+import { ProductsModule } from './products/products.module';
+import { join } from 'path';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
-  imports: [UsersModule, AuthModule, ConfigModule.forRoot({
-    isGlobal: true,
-  }),MongooseModule.forRootAsync({
-    imports: [ConfigModule],
-    inject: [ConfigService],
-    useFactory: async (configService: ConfigService) => ({
-      uri: configService.get<string>('MONGO_URI'),
-    }),  }), CategoriesModule, SubCategoriesModule,],
+  imports: [
+    UsersModule,
+    AuthModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'), 
+      serveRoot: '/uploads', 
+    }),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGO_URI'),
+      }),
+    }),
+    CategoriesModule,
+    SubCategoriesModule,
+    ProductsModule,
+    // Serve uploads folder as static files
+   
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

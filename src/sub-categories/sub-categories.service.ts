@@ -2,10 +2,9 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { CreateSubCategoryDto } from './dto/create-sub-category.dto';
 import { UpdateSubCategoryDto } from './dto/update-sub-category.dto';
 import { SubCategory, SubCategoryDocument } from './entities/sub-category.entity';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { CategoriesService } from 'src/categories/categories.service';
-import { CategoriesModule } from 'src/categories/categories.module';
 
 @Injectable()
 export class SubCategoriesService {
@@ -39,7 +38,7 @@ return newSubCategory;  }
     return this.subCategoryModel.find()
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} subCategory`;
   }
 
@@ -50,4 +49,16 @@ return newSubCategory;  }
   remove(id: number) {
     return `This action removes a #${id} subCategory`;
   }
+
+  async getSubcategoriesByCategory(categoryId: string) {
+    if (!Types.ObjectId.isValid(categoryId)) {
+      throw new Error('Invalid category ID');
+    }
+
+    const subCategories = await this.subCategoryModel
+      .find({ categoryId: categoryId })
+
+    return subCategories;
+  }
+
 }

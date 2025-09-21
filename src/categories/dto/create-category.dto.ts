@@ -6,10 +6,12 @@ export class CreateCategoryDto {
     @IsNotEmpty()
   name: string;
 
-  @IsEmail()
+  @IsOptional()
   isActive: boolean;
 
   @IsOptional()
-  subCategories:[string]
+  subCategories: [string]
+  @IsOptional()
+  productsId: [string];
 
 }

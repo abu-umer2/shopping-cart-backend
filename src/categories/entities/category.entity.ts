@@ -9,11 +9,15 @@ export class Category {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ required: true })
+  @Prop({default: true})
   isActive: boolean;
 
   @Prop({ type: [{ type: Types.ObjectId, ref: SubCategory.name }] })
   subCategories: Types.ObjectId[];
+
+  
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Product' }] })
+  ProductsId: Types.ObjectId[];
 
   
 }

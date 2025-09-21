@@ -9,11 +9,13 @@ export class SubCategory {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ required: true })
+  @Prop({ default:true })
   isActive: boolean;
 
   @Prop({ type: Types.ObjectId, ref: 'Category', required: true })
   categoryId: Types.ObjectId;
+  @Prop({ type: Types.ObjectId, ref: 'Product'})
+  ProductsId: Types.ObjectId[];
   
 
   
