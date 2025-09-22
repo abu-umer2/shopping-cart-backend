@@ -43,7 +43,6 @@ export class ProductsService {
       { $push: { productsId: product._id } },
       { new: true }
     );
-    console.log('Products from DB:', product);
     return product
   }
 
@@ -53,7 +52,6 @@ export class ProductsService {
         .populate('categoriesId')
         .populate('subCategoriesId');
     
-        console.log("Populated products:", JSON.stringify(products, null, 2));
         return products;
     }
   
