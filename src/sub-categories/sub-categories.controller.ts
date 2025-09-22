@@ -33,6 +33,6 @@ export class SubCategoriesController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.subCategoriesService.remove(+id);
+    return this.subCategoriesService.remove(id);
   }
 }

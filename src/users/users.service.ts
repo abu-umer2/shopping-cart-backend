@@ -32,20 +32,20 @@ export class UsersService {
    
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll() {
+    return await this.userModel.find()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    return await this.userModel.findById({_id:id})
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    return await this.userModel.findByIdAndUpdate({_id:id}, updateUserDto,{new:true})
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    return await this.userModel.findByIdAndDelete({_id:id})
   }
 
   findByUsername(username: string) {

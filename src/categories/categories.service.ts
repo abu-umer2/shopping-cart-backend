@@ -21,20 +21,20 @@ export class CategoriesService {
     return await this.categoryModel.create(createCategoryDto)
   }
 
-  findAll() {
-    return this.categoryModel.find().populate('subCategories').exec();
+  async findAll() {
+    return await this.categoryModel.find().populate('subCategories').exec();
   }
 
-  findOne(id: string) {
-    return this.categoryModel.findById(id).populate('subCategories').exec();
+  async findOne(id: string) {
+    return await this.categoryModel.findById(id).populate('subCategories').exec();
   }
 
-  update(id: string, updateCategoryDto: UpdateCategoryDto) {
-    return this.categoryModel.findByIdAndUpdate(id,updateCategoryDto,{ new: true })
+  async update(id: string, updateCategoryDto: UpdateCategoryDto) {
+    return await this.categoryModel.findByIdAndUpdate(id,updateCategoryDto,{ new: true })
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async remove(id: string) {
+    return await this.categoryModel.findByIdAndDelete(id)
   }
   
 async addSubCategory(categoryId: string, subCategoryId: Types.ObjectId) {

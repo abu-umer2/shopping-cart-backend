@@ -14,12 +14,12 @@ export class CategoriesController {
 
   @Get()
   findAll() {
-    return this.categoriesService.findAll();
+    return this.categoriesService.findAll()
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.categoriesService.findOne(id);
+    return this.categoriesService.findOne(id)
   }
 
   @Patch(':id')
@@ -29,6 +29,6 @@ export class CategoriesController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.categoriesService.remove(+id);
+    return this.categoriesService.remove(id);
   }
 }

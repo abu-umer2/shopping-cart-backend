@@ -34,20 +34,20 @@ await this.categoriesService.addSubCategory(categoryId, newSubCategory._id);
 
 return newSubCategory;  }
 
-  findAll() {
-    return this.subCategoryModel.find()
+  async findAll() {
+    return await this.subCategoryModel.find()
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} subCategory`;
+  async findOne(id: string) {
+    return await this.subCategoryModel.findById({_id:id})
   }
 
-  update(id: number, updateSubCategoryDto: UpdateSubCategoryDto) {
-    return `This action updates a #${id} subCategory`;
+  async update(id: number, updateSubCategoryDto: UpdateSubCategoryDto) {
+    return await this.subCategoryModel.findByIdAndUpdate({_id:id}, updateSubCategoryDto,{new:true})
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} subCategory`;
+  remove(id: string) {
+    return this.subCategoryModel.findByIdAndDelete({_id:id})
   }
 
   async getSubcategoriesByCategory(categoryId: string) {

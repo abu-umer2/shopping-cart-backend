@@ -58,15 +58,16 @@ export class ProductsService {
     }
   
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(id: string) {
+    return await this.productModel.findById(id).populate('categoriesId')
+    .populate('subCategoriesId');
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(id: string, updateProductDto: UpdateProductDto) {
+    return await this.productModel.findOneAndUpdate({ _id: id }, updateProductDto, { new: true });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(id: string) {
+    return await this.productModel.findOneAndDelete({_id:id})
   }
 }
