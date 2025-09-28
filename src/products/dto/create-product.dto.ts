@@ -20,9 +20,9 @@ export class CreateProductDto {
 
   @IsNotEmpty()
   @IsMongoId()
-  categoriesId: ObjectId[];
+  categoriesId: ObjectId;
 
   @IsNotEmpty()
   @IsMongoId()
-  subCategoriesId: ObjectId[];
+  subCategoriesId: ObjectId;
 }

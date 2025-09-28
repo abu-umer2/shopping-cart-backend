@@ -12,17 +12,16 @@ export class Product {
     description:string
     @Prop({ required: true })
     price:string
-    @Prop({ required: true })
-    images:[string]
+    @Prop()
+    image:string
     @Prop()
     review:string
     
-    @Prop({ type: [{ type: Types.ObjectId, ref: Category.name }] })
-    categoriesId: Types.ObjectId[];
-   
-  
-    @Prop({ type: Types.ObjectId, ref: SubCategory.name,required: true })
-    subCategoriesId: Types.ObjectId[];
+    @Prop({ type: Types.ObjectId, ref: Category.name, required: true })
+categoriesId: Types.ObjectId;
+
+@Prop({ type: Types.ObjectId, ref: SubCategory.name })
+subCategoriesId: Types.ObjectId;
  }
 
  export const ProductSchema = SchemaFactory.createForClass(Product)

@@ -24,7 +24,7 @@ export class ProductsController {
     }),
   )
   create(@Body() createProductDto: CreateProductDto, @UploadedFile() file: Express.Multer.File,) {
-    createProductDto.image = file ? `/uploads/products/${file.filename}` : '';
+    createProductDto.image = file ? `http://localhost:3000/uploads/products/${file.filename}` : '';
 
     return this.productsService.create(createProductDto);
   }
@@ -40,9 +40,32 @@ export class ProductsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productsService.update(id, updateProductDto);
+@UseInterceptors(
+  FileInterceptor('image', {
+    storage: diskStorage({
+      destination: './uploads/products',
+      filename: (req, file, callback) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+        callback(null, `${uniqueSuffix}${extname(file.originalname)}`);
+      },
+    }),
+  }),
+)
+async update(
+  @Param('id') id: string,
+  @Body() updateProductDto: UpdateProductDto,
+  @UploadedFile() file?: Express.Multer.File,
+) {
+  if (file) {
+    updateProductDto.image = `http://localhost:3000/uploads/products/${file.filename}`;
   }
+  else {
+    delete updateProductDto.image;
+  }
+  return this.productsService.update(id, updateProductDto);
+}
+
+  
 
   @Delete(':id')
   remove(@Param('id') id: string) {

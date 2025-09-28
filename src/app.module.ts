@@ -17,6 +17,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: '.env',
     }),ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'), 
       serveRoot: '/uploads', 
