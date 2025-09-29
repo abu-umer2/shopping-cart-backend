@@ -55,6 +55,9 @@ export class ProductsService {
   async findAll() {
       const products = await this.productModel
         .find()
+        .populate('categoriesId', 'name')     
+        .populate('subCategoriesId', 'name')   
+        .exec();  
         return products;
     }
   

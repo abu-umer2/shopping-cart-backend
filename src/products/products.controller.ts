@@ -31,7 +31,7 @@ export class ProductsController {
 
   @Get()
   findAll() {
-    return this.productsService.findAll();
+    return this.productsService.findAll()
   }
 
   @Get(':id')
