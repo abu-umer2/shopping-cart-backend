@@ -16,6 +16,17 @@ export class Product {
     image:string
     @Prop()
     review:string
+    @Prop({ default: [] })
+    colors: string[]; 
+  
+    @Prop({ default: [] })
+    sizes: string[]; 
+    
+    @Prop({ default: 0 })
+    stock: number;
+  
+    @Prop({ default: 0 })
+    ratings: number;
     
     @Prop({ type: Types.ObjectId, ref: Category.name, required: true })
 categoriesId: Types.ObjectId;

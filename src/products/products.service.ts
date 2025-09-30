@@ -19,14 +19,17 @@ export class ProductsService {
 
   ) { }
   async create(createProductDto: CreateProductDto) {
+    const {categoriesId, subCategoriesId, ...rest} = createProductDto
     console.log('cat',createProductDto)
-    const category = await this.categoryModel.findById(createProductDto.categoriesId)
+    const category = await this.categoryModel.findById(categoriesId)
     if (!category) {
       throw new NotFoundException('category not found')
     }
+
+    
     let subCategory: any = null; 
-    if (createProductDto.subCategoriesId) {
-      subCategory = await this.subCategoryModel.findById(createProductDto.subCategoriesId);
+    if (subCategoriesId) {
+      subCategory = await this.subCategoryModel.findById(subCategoriesId);
       if (!subCategory) {
         throw new NotFoundException('SubCategory not found');
       }
