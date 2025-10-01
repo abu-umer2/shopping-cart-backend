@@ -16,11 +16,11 @@ export class Product {
     image:string
     @Prop()
     review:string
-    @Prop({ default: [] })
-    colors: string[]; 
+    @Prop()
+    colors: string; 
   
-    @Prop({ default: [] })
-    sizes: string[]; 
+    @Prop()
+    sizes: string; 
     
     @Prop({ default: 0 })
     stock: number;
