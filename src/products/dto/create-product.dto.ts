@@ -21,14 +21,12 @@ export class CreateProductDto {
   image?: string; 
 
   @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  colors?: string[];
+  @IsString()
+  colors?: string;
 
   @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  sizes?: string[];
+  @IsString()
+  sizes?: string;
 
   @IsOptional()
   @IsNumber()
