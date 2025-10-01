@@ -22,11 +22,11 @@ export class CreateProductDto {
 
   @IsOptional()
   @IsString()
-  colors?: string;
+  color?: string;
 
   @IsOptional()
   @IsString()
-  sizes?: string;
+  size?: string;
 
   @IsOptional()
   @IsNumber()
