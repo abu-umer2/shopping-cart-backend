@@ -17,10 +17,10 @@ export class Product {
     @Prop()
     review:string
     @Prop()
-    colors: string; 
+    color: string; 
   
     @Prop()
-    sizes: string; 
+    size: string; 
     
     @Prop({ default: 0 })
     stock: number;
