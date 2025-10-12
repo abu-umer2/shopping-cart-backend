@@ -71,6 +71,11 @@ async update(
   remove(@Param('id') id: string) {
     return this.productsService.remove(id);
   }
+  @Get('sub/:subId')
+  async getProductsBySub(@Param('subId') subId: string) {
+    return this.productsService.getProductsBySub(subId);
+  }
+
 }
 
 

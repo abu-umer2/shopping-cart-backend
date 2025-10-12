@@ -68,6 +68,15 @@ export class ProductsService {
   async findOne(id: string) {
     return await this.productModel.findById(id)
   }
+  async getProductsBySub(id: string) {
+    console.log("Subcategory ID:", id);
+  
+    const products = await this.productModel.find({
+      subCategoriesId: id
+    }).exec();
+  
+    return products;
+  }
 
  
   async update(id: string, updateProductDto: UpdateProductDto): Promise<ProductDocument> {

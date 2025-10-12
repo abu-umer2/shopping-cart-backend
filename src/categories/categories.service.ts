@@ -22,7 +22,7 @@ export class CategoriesService {
   }
 
   async findAll() {
-    return await this.categoryModel.find().populate('subCategories').exec();
+    return await this.categoryModel.find().populate('subCategories',"name").exec();
   }
 
   async findOne(id: string) {
