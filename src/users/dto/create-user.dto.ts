@@ -1,13 +1,51 @@
-import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+import { IsString, IsEmail, MinLength, MaxLength, IsEnum, IsOptional, ValidateNested, IsPostalCode, IsNotEmpty } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+
+
+
+
+export class AddressDto {
+  @IsString()
+  @IsNotEmpty()
+  street: string;
+
+  @IsString()
+  @IsNotEmpty()
+  city: string;
+
+  @IsString()
+  @IsNotEmpty()
+  state: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @IsPostalCode('any')
+  zipCode: string;
+
+  @IsOptional()
+  @IsString()
+  country: string;
+}
+
 
 export class CreateUserDto {
-  @IsNotEmpty()
-  username: string;
-
   @IsEmail()
+  @IsNotEmpty()
   email: string;
 
+  @IsString()
   @IsNotEmpty()
-  @MinLength(6)
+  @MinLength(8, { message: 'Password must be at least 8 characters long' })
   password: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(50)
+  firstName: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(50)
+  lastName: string;
 }

@@ -10,6 +10,7 @@ import { SubCategoriesModule } from './sub-categories/sub-categories.module';
 import { ProductsModule } from './products/products.module';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { AdminsModule } from './admins/admins.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     CategoriesModule,
     SubCategoriesModule,
     ProductsModule,
+    AdminsModule,
     // Serve uploads folder as static files
    
   ],

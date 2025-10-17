@@ -69,7 +69,6 @@ export class ProductsService {
     return await this.productModel.findById(id)
   }
   async getProductsBySub(id: string) {
-    console.log("Subcategory ID:", id);
   
     const products = await this.productModel.find({
       subCategoriesId: id

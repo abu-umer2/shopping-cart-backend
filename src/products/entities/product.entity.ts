@@ -2,8 +2,11 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from 'mongoose';
 import { Category } from "src/categories/entities/category.entity";
 import { SubCategory } from "src/sub-categories/entities/sub-category.entity";
-
-export type ProductDocument = Product & Document
+export enum ProductType {
+    AVAILABLE = "available",
+    BEST_SELLING = "best_selling",
+    UPCOMING = "upcoming",
+  }export type ProductDocument = Product & Document
 @Schema()
 export class Product {
     @Prop({ required: true })
@@ -21,6 +24,12 @@ export class Product {
   
     @Prop()
     size: string; 
+    @Prop({
+        type: String,
+        enum: ProductType,
+        default: ProductType.AVAILABLE,
+      })
+      productType: ProductType;
     
     @Prop({ default: 0 })
     stock: number;
