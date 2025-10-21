@@ -53,7 +53,7 @@ export class UsersService {
 
   async findByUsername(username: string) {
     
-    return    await this.userModel.findOne({ username }).exec();
+    return    await this.userModel.findOne({ username }).select('+password').exec();
     
     
   }
