@@ -9,8 +9,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from './entities/user.entity';
 import { Model } from 'mongoose';
 import { UserDocument } from 'src/users/entities/user.entity';
-import { SignUpDto } from './dto/Signup.dto';
-
+import { CreateUserDto } from './dto/Signup.dto';
 @Injectable()
 export class AuthService {
     constructor(@InjectModel(User.name) private userModel: Model<UserDocument> , private readonly configService: ConfigService,    private readonly usersService: UsersService,
@@ -36,27 +35,28 @@ export class AuthService {
         return {access_token: this.jwtService.sign(payload), user:{id:admin._id, email:admin.email, username:admin.username}}
 
     }
-    async signUp(signUpDto: SignUpDto) {
-        // const { email, password, firstName, lastName, role } = signUpDto;
-        console.log('sign', signUpDto)
+    async signUp(createUserDto: CreateUserDto) {
+        // const { email, password, firstName, lastName, role } = CreateUserDto;
+        console.log('sign', createUserDto)
 
-        const existingUser = await this.usersService.findByUsername(signUpDto.username)
+        const existingUser = await this.usersService.findByUsername(createUserDto.username)
   if (existingUser) {
     throw new ConflictException('User with this username already exists.');
   }
         
   try {
     // Default role if not provided
-    const role = signUpDto.role || 'customer';
+    // const role = createUserDto.role || 'customer';
 
     // Hash password
-    const hashedPassword = await bcrypt.hash(signUpDto.password, 10);
+    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
     // Create new user
     const newUser = new this.userModel({
-      ...signUpDto,
+      ...createUserDto,
       password: hashedPassword,
     });
+
 
     console.log('Creating new user:', newUser);
 

@@ -1,8 +1,8 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/Login.dto';
-import { SignUpDto } from './dto/Signup.dto';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
+import { CreateUserDto } from './dto/Signup.dto';
 
 
 @Controller('auth')
@@ -19,8 +19,11 @@ async AdminLogin(@Body() loginDto: LoginDto ) {
    @Post('signup')
    @ApiResponse({ status: 201, description: 'User successfully registered.' })
    @ApiResponse({ status: 400, description: 'Invalid input or email already exists.' })
-    async signUp(@Body() signUpDto: SignUpDto) {
-      return this.authService.signUp(signUpDto);
+   async signUp(@Body() body: any) {
+    if (body.shippingAddresses && typeof body.shippingAddresses === 'string') {
+      body.shippingAddresses = JSON.parse(body.shippingAddresses);
+    }
+      return this.authService.signUp(body as CreateUserDto);
     }
   
   
