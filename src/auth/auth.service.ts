@@ -36,7 +36,6 @@ export class AuthService {
 
     }
     async signUp(createUserDto: CreateUserDto) {
-        // const { email, password, firstName, lastName, role } = CreateUserDto;
         console.log('sign', createUserDto)
 
         const existingUser = await this.usersService.findByUsername(createUserDto.username)
@@ -45,13 +44,9 @@ export class AuthService {
   }
         
   try {
-    // Default role if not provided
-    // const role = createUserDto.role || 'customer';
-
-    // Hash password
+   
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
-    // Create new user
     const newUser = new this.userModel({
       ...createUserDto,
       password: hashedPassword,
@@ -100,7 +95,8 @@ export class AuthService {
       }
     
     
-      async validateUser(userId: string): Promise<Partial<User>> {
+  async validateUser(userId: string): Promise<Partial<User>> {
+        
         const user = await this.usersService.findById(userId);
         if (!user) {
           throw new UnauthorizedException('User not found');

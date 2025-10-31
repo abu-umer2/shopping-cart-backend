@@ -103,4 +103,8 @@ export class ProductsService {
   async remove(id: string) {
     return await this.productModel.findOneAndDelete({_id:id})
   }
+
+  async findById(id: string) {
+    return await this.productModel.findById(id)
+  }
 }

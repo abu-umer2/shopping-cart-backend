@@ -16,5 +16,6 @@ import { SubCategory, SubCategorySchema } from 'src/sub-categories/entities/sub-
     ]), CategoriesModule, SubCategoriesModule],
   controllers: [ProductsController],
   providers: [ProductsService],
+  exports: [ProductsService],
 })
 export class ProductsModule {}

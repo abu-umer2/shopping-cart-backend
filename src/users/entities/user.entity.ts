@@ -27,6 +27,8 @@ export type UserDocument = User & Document;
   collection: 'users' 
 })
 export class User {
+  _id?: Types.ObjectId;
+
   @Prop({ required: true, unique: true,}) 
   username: string;
   @Prop({ required: true, unique: true, index: true })
@@ -43,6 +45,8 @@ export class User {
 
   @Prop({ default: null })
   phoneNumber: string;
+  @Prop({ type: String, enum: ['customer', 'admin'], default: 'customer', index: true }) 
+  role: string;
 
   @Prop({ type: [Address], default: [] })
   shippingAddresses: Address[];
