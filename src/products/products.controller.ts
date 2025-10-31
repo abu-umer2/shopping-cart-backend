@@ -24,7 +24,7 @@ export class ProductsController {
     }),
   )
   create(@Body() createProductDto: CreateProductDto, @UploadedFile() file: Express.Multer.File,) {
-    createProductDto.image = file ? `http://localhost:3000/uploads/products/${file.filename}` : '';
+    createProductDto.image = file ? `http://localhost:1000/uploads/products/${file.filename}` : '';
 
     return this.productsService.create(createProductDto);
   }
@@ -57,7 +57,7 @@ async update(
   @UploadedFile() file?: Express.Multer.File,
 ) {
   if (file) {
-    updateProductDto.image = `http://localhost:3000/uploads/products/${file.filename}`;
+    updateProductDto.image = `http://localhost:1000/uploads/products/${file.filename}`;
   }
   else {
     delete updateProductDto.image;
