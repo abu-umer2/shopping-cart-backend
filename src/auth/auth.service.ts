@@ -71,7 +71,7 @@ export class AuthService {
       ): Promise<{ accessToken: string; user: Partial<User> }> {
         const { username, password } = loginDto;
     
-        const user = await this.usersService.findByUsername(username);
+        const user = await this.usersService.findByUsername(username)
         if (!user) {
           throw new UnauthorizedException('Invalid credentials'); 
         }
@@ -89,9 +89,10 @@ export class AuthService {
     
         const accessToken = this.jwtService.sign(payload);
     
-        // Return the token and partial user data (without password)
-        const { password: _, ...result } = user;
-        return { accessToken, user: result };
+        // const { password: _, ...result } = user;
+        console.log('acc', accessToken)
+        console.log('user',user)
+        return { accessToken, user };
       }
     
     
