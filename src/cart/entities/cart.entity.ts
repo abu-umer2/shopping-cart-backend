@@ -16,7 +16,7 @@ export class CartItem{
     price: number;
     
     @Prop({ type: String }) 
-    imageFiles?: string;
+    image?: string;
 }
     
 export const CartItemSchema = SchemaFactory.createForClass(CartItem);

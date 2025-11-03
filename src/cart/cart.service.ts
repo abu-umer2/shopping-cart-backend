@@ -78,7 +78,7 @@ export class CartService {
         productName: product.name,
         quantity,
         price: product.price, 
-        imageFiles: product.image && product.image.length > 0 ? product.image[0] : undefined,
+        image: product.image && product.image.length > 0 ? product.image[0] : undefined,
       };
       cart.items.push(newCartItem);
     }
