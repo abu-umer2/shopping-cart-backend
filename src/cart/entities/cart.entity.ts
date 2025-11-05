@@ -6,7 +6,7 @@ import { User } from "src/users/entities/user.entity";
 @Schema()
 export class CartItem{
     @Prop({ type: Types.ObjectId, ref: 'Product', required: true })
-    productId: Types.ObjectId | Product;
+  productId: Types.ObjectId | Product;
     @Prop({ required: true, trim: true })
     productName: string;
     @Prop({ required: true, type: Number, min: 1 })

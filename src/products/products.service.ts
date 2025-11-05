@@ -92,7 +92,6 @@ export class ProductsService {
     }
   
     Object.assign(product, updateProductDto);
-    console.log('pro', product)
   
     try {
       return await product.save();

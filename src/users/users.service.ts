@@ -63,8 +63,7 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException(`User with ID "${id}" not found.`);
     }
-console.log('dto',updateUserDto)
-console.log('id',id)
+
 if (updateUserDto.email && updateUserDto.email !== user.email) {
   const existingUser = await this.userModel
   .findOne({ email: updateUserDto.email })

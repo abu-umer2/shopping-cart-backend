@@ -9,6 +9,8 @@ export enum ProductType {
   }export type ProductDocument = Product & Document
 @Schema()
 export class Product {
+    _id: Types.ObjectId;
+
     @Prop({ required: true })
     name:string
     @Prop({ required: true })

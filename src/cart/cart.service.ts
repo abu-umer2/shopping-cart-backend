@@ -28,7 +28,6 @@ export class CartService {
       // })
       .exec();
     
-    console.log('user',userId)
 
     if (!cart) {
       cart = new this.cartModel({
@@ -78,7 +77,7 @@ export class CartService {
         productName: product.name,
         quantity,
         price: product.price, 
-        image: product.image && product.image.length > 0 ? product.image[0] : undefined,
+        image: product.image, 
       };
       cart.items.push(newCartItem);
     }
@@ -130,24 +129,35 @@ export class CartService {
   }
 
  
-  async removeItem(userId: string, productId: string): Promise<CartDocument> {
-    const cart = await this.getOrCreateCart(userId);
-    const initialItemCount = cart.items.length;
+ async removeItem(userId: string, productId: string): Promise<CartDocument> {
+  const cart = await this.getOrCreateCart(userId);
+  const initialItemCount = cart.items.length;
 
-    cart.items = cart.items.filter((item) => item.productId.toString() !== productId);
-    cart.items.map(item=>{console.log('id', item.productId)})
-  
-
-    if (cart.items.length === initialItemCount) {
-      throw new NotFoundException(`Product with ID "${productId}" not found in cart.`);
-    }
-
-    try {
-      return await cart.save();
-    } catch (error) {
-      throw new InternalServerErrorException('Failed to remove item from cart.');
-    }
+  if (!Types.ObjectId.isValid(productId)) {
+    throw new BadRequestException(`Invalid product ID: "${productId}"`);
   }
+
+  const productObjectId = new Types.ObjectId(productId);
+
+  cart.items = cart.items.filter(item => {
+    // Handle populated productId (object) or raw ObjectId
+    const currentId = item.productId instanceof Types.ObjectId
+      ? item.productId
+      : (item.productId as any)._id;
+
+    return !currentId.equals(productObjectId);
+  });
+
+  if (cart.items.length === initialItemCount) {
+    throw new NotFoundException(`Product with ID "${productId}" not found in cart.`);
+  }
+
+  try {
+    return await cart.save();
+  } catch (error) {
+    throw new InternalServerErrorException('Failed to remove item from cart.');
+  }
+}
 
 
   async clearCart(userId: string): Promise<CartDocument> {
@@ -155,6 +165,8 @@ export class CartService {
     cart.items = [];
     cart.totalPrice = 0; 
     try {
+          console.log('clicked')
+
       return await cart.save();
     } catch (error) {
       throw new InternalServerErrorException('Failed to clear cart.');

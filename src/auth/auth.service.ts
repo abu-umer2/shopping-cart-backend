@@ -36,7 +36,6 @@ export class AuthService {
 
     }
     async signUp(createUserDto: CreateUserDto) {
-        console.log('sign', createUserDto)
 
         const existingUser = await this.usersService.findByUsername(createUserDto.username)
   if (existingUser) {
@@ -53,7 +52,6 @@ export class AuthService {
     });
 
 
-    console.log('Creating new user:', newUser);
 
     const savedUser = await newUser.save();
     return savedUser;
@@ -90,8 +88,7 @@ export class AuthService {
         const accessToken = this.jwtService.sign(payload);
     
         // const { password: _, ...result } = user;
-        console.log('acc', accessToken)
-        console.log('user',user)
+        
         return { accessToken, user };
       }
     

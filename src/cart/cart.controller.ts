@@ -56,12 +56,10 @@ export class CartController {
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 404, description: 'Product not found.' })
   async addItemToCart(@Body() addItemDto: AddItemToCartDto, @GetUser() user: User) {
-    console.log('body',addItemDto)
     if (!user || !user._id) {
       throw new UnauthorizedException('User is not authenticated');
     }
 
-    console.log("user", user)
     
     return this.cartService.addItem(user._id.toString(), addItemDto);
   }
