@@ -100,7 +100,8 @@ export class CartService {
     const existingItemIndex = cart.items.findIndex(
       (item) => item.productId.toString() === productId,
     );
-
+    console.log('id', productId)
+    console.log('quantity', quantity)
     if (existingItemIndex === -1) {
       throw new NotFoundException(`Product with ID "${productId}" not found in cart.`);
     }
