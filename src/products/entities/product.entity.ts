@@ -35,6 +35,8 @@ export class Product {
     
     @Prop({ default: 0 })
     stock: number;
+  @Prop([String])
+  imageFiles?: string[];
   
     @Prop({ default: 0 })
     ratings: number;
