@@ -42,7 +42,6 @@ export class CreateProductDto {
   @IsOptional()
   imageFiles?: string[];
 
-  @IsNotEmpty()
   @IsOptional()
   review: string;
 

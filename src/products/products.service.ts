@@ -18,42 +18,74 @@ export class ProductsService {
     private readonly SubCategoryService: SubCategoriesService,
 
   ) { }
-  async create(createProductDto: CreateProductDto) {
-    const { categoriesId, subCategoriesId, ...rest } = createProductDto
-    console.log('cat', createProductDto)
-    const category = await this.categoryModel.findById(categoriesId)
-    if (!category) {
-      throw new NotFoundException('category not found')
-    }
+  // async create(createProductDto: CreateProductDto) {
+  //   const { categoriesId, subCategoriesId, ...rest } = createProductDto
+  //   console.log('cat', createProductDto)
+  //   const category = await this.categoryModel.findById(categoriesId)
+  //   if (!category) {
+  //     throw new NotFoundException('category not found')
+  //   }
 
+
+  //   let subCategory: any = null;
+  //   if (subCategoriesId) {
+  //     subCategory = await this.subCategoryModel.findById(subCategoriesId);
+  //     if (!subCategory) {
+  //       throw new NotFoundException('SubCategory not found');
+  //     }
+  //   }
+
+
+
+
+  //   const product = await this.productModel.create(createProductDto)
+  //   await this.categoryModel.findByIdAndUpdate(
+  //     createProductDto.categoriesId,
+  //     { $push: { productsId: product._id } },
+  //     { new: true }
+  //   );
+
+  //   if (createProductDto.subCategoriesId) {
+  //     await this.subCategoryModel.findByIdAndUpdate(
+  //       createProductDto.subCategoriesId,
+  //       { $push: { productsId: product._id } },
+  //       { new: true }
+  //     );
+  //   }
+  //   return product
+  // }
+
+  async create(createProductDto: CreateProductDto) {
+    const { categoriesId, subCategoriesId, ...rest } = createProductDto;
+
+    const category = await this.categoryModel.findById(categoriesId);
+    if (!category) throw new NotFoundException('Category not found');
 
     let subCategory: any = null;
     if (subCategoriesId) {
       subCategory = await this.subCategoryModel.findById(subCategoriesId);
-      if (!subCategory) {
-        throw new NotFoundException('SubCategory not found');
-      }
+      if (!subCategory) throw new NotFoundException('SubCategory not found');
     }
 
+    const product = await this.productModel.create({
+      ...rest,
+      categoriesId,
+      subCategoriesId,
+    });
 
+    await this.categoryModel.findByIdAndUpdate(categoriesId, {
+      $push: { productsId: product._id },
+    });
 
-
-    const product = await this.productModel.create(createProductDto)
-    await this.categoryModel.findByIdAndUpdate(
-      createProductDto.categoriesId,
-      { $push: { productsId: product._id } },
-      { new: true }
-    );
-
-    if (createProductDto.subCategoriesId) {
-      await this.subCategoryModel.findByIdAndUpdate(
-        createProductDto.subCategoriesId,
-        { $push: { productsId: product._id } },
-        { new: true }
-      );
+    if (subCategoriesId) {
+      await this.subCategoryModel.findByIdAndUpdate(subCategoriesId, {
+        $push: { productsId: product._id },
+      });
     }
-    return product
+
+    return product;
   }
+
 
   async findAll() {
     const products = await this.productModel
@@ -78,6 +110,37 @@ export class ProductsService {
   }
 
 
+  // async update(id: string, updateProductDto: UpdateProductDto): Promise<ProductDocument> {
+  //   const product = await this.productModel.findById(id).exec();
+  //   if (!product) {
+  //     throw new NotFoundException(`Product with ID "${id}" not found.`);
+  //   }
+
+  //   if (updateProductDto.name && updateProductDto.name !== product.name) {
+  //     const existingProductWithName = await this.productModel.findOne({ name: updateProductDto.name }).exec();
+  //     if (existingProductWithName && (existingProductWithName._id as Types.ObjectId).toString() !== id) {
+  //       throw new ConflictException('Product with this name already exists.');
+  //     }
+  //   }
+
+  //   if (updateProductDto.image) {
+  //     product.image = updateProductDto.image;
+  //   }
+
+  //   if (updateProductDto.imageFiles) {
+  //     product.imageFiles = updateProductDto.imageFiles;
+  //   }
+
+  //   const { image, imageFiles, ...rest } = updateProductDto;
+  //   Object.assign(product, rest);
+
+  //   try {
+  //     return await product.save();
+  //   } catch (error) {
+  //     throw new InternalServerErrorException('Failed to update product.');
+  //   }
+  // }
+
   async update(id: string, updateProductDto: UpdateProductDto): Promise<ProductDocument> {
     const product = await this.productModel.findById(id).exec();
     if (!product) {
@@ -85,18 +148,21 @@ export class ProductsService {
     }
 
     if (updateProductDto.name && updateProductDto.name !== product.name) {
-      const existingProductWithName = await this.productModel.findOne({ name: updateProductDto.name }).exec();
-      if (existingProductWithName && (existingProductWithName._id as Types.ObjectId).toString() !== id) {
+      const existingProduct = await this.productModel.findOne({ name: updateProductDto.name }).exec();
+      if (existingProduct && existingProduct._id.toString() !== id) {
         throw new ConflictException('Product with this name already exists.');
       }
     }
 
-    if (updateProductDto.imageFiles !== undefined) {
+    if (updateProductDto.image) {
+      product.image = updateProductDto.image;
+    }
+    if (updateProductDto.imageFiles) {
       product.imageFiles = updateProductDto.imageFiles;
     }
 
-
-    Object.assign(product, updateProductDto);
+    const { image, imageFiles, ...rest } = updateProductDto;
+    Object.assign(product, rest);
 
     try {
       return await product.save();
@@ -104,6 +170,7 @@ export class ProductsService {
       throw new InternalServerErrorException('Failed to update product.');
     }
   }
+
   async remove(id: string) {
     return await this.productModel.findOneAndDelete({ _id: id })
   }
