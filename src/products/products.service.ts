@@ -110,38 +110,9 @@ export class ProductsService {
   }
 
 
-  // async update(id: string, updateProductDto: UpdateProductDto): Promise<ProductDocument> {
-  //   const product = await this.productModel.findById(id).exec();
-  //   if (!product) {
-  //     throw new NotFoundException(`Product with ID "${id}" not found.`);
-  //   }
 
-  //   if (updateProductDto.name && updateProductDto.name !== product.name) {
-  //     const existingProductWithName = await this.productModel.findOne({ name: updateProductDto.name }).exec();
-  //     if (existingProductWithName && (existingProductWithName._id as Types.ObjectId).toString() !== id) {
-  //       throw new ConflictException('Product with this name already exists.');
-  //     }
-  //   }
 
-  //   if (updateProductDto.image) {
-  //     product.image = updateProductDto.image;
-  //   }
-
-  //   if (updateProductDto.imageFiles) {
-  //     product.imageFiles = updateProductDto.imageFiles;
-  //   }
-
-  //   const { image, imageFiles, ...rest } = updateProductDto;
-  //   Object.assign(product, rest);
-
-  //   try {
-  //     return await product.save();
-  //   } catch (error) {
-  //     throw new InternalServerErrorException('Failed to update product.');
-  //   }
-  // }
-
-  async update(id: string, updateProductDto: UpdateProductDto): Promise<ProductDocument> {
+  async update(id: string, updateProductDto: UpdateProductDto & { removeImages?: string[] }): Promise<ProductDocument> {
     const product = await this.productModel.findById(id).exec();
     if (!product) {
       throw new NotFoundException(`Product with ID "${id}" not found.`);
@@ -157,11 +128,15 @@ export class ProductsService {
     if (updateProductDto.image) {
       product.image = updateProductDto.image;
     }
-    if (updateProductDto.imageFiles) {
-      product.imageFiles = updateProductDto.imageFiles;
+    if (updateProductDto.imageFiles?.length) {
+      product.imageFiles?.push(...updateProductDto.imageFiles);
     }
 
-    const { image, imageFiles, ...rest } = updateProductDto;
+    if (updateProductDto.removeImages?.length) {
+      product.imageFiles = product.imageFiles?.filter(img => !updateProductDto.removeImages!.includes(img));
+    }
+
+    const { image, imageFiles, removeImages, ...rest } = updateProductDto;
     Object.assign(product, rest);
 
     try {
