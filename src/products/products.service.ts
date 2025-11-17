@@ -96,7 +96,12 @@ export class ProductsService {
     return products;
   }
 
-
+  async searchProduct(query: string) {
+    console.log('query', query)
+    return await this.productModel.find({
+      name: { $regex: query, $options: "i" }
+    });
+  }
   async findOne(id: string) {
     return await this.productModel.findById(id)
   }

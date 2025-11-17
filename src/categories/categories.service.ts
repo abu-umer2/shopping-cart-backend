@@ -10,7 +10,7 @@ export class CategoriesService {
   constructor(
 
     @InjectModel(Category.name) private categoryModel: Model<CategoryDocument>,
-  ) {}
+  ) { }
   async create(createCategoryDto: CreateCategoryDto) {
     const { name, isActive } = createCategoryDto
     const CategoryExist = await this.categoryModel.findOne({ name })
@@ -22,7 +22,13 @@ export class CategoriesService {
   }
 
   async findAll() {
-    return await this.categoryModel.find().populate('subCategories',"name").exec();
+    return await this.categoryModel.find().populate('subCategories', "name").exec();
+  }
+  async searchCat(query: string) {
+    console.log('query', query)
+    return await this.categoryModel.find({
+      name: { $regex: query, $options: "i" }
+    });
   }
 
   async findOne(id: string) {
@@ -30,21 +36,21 @@ export class CategoriesService {
   }
 
   async update(id: string, updateCategoryDto: UpdateCategoryDto) {
-    return await this.categoryModel.findByIdAndUpdate(id,updateCategoryDto,{ new: true })
+    return await this.categoryModel.findByIdAndUpdate(id, updateCategoryDto, { new: true })
   }
 
   async remove(id: string) {
     return await this.categoryModel.findByIdAndDelete(id)
   }
-  
-async addSubCategory(categoryId: string, subCategoryId: Types.ObjectId) {
-  return this.categoryModel.findByIdAndUpdate(
-    categoryId,
-    { $push: { subCategories: subCategoryId } },
-    { new: true },
-  );
-}
-  
+
+  async addSubCategory(categoryId: string, subCategoryId: Types.ObjectId) {
+    return this.categoryModel.findByIdAndUpdate(
+      categoryId,
+      { $push: { subCategories: subCategoryId } },
+      { new: true },
+    );
+  }
+
   async findCategoryById(id: string) {
     return this.categoryModel.findByIdAndUpdate(id)
   }
