@@ -3,7 +3,7 @@
 import { IsEmail, IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateSubCategoryDto {
-    @IsNotEmpty()
+  @IsNotEmpty()
   name: string;
 
   @IsOptional()

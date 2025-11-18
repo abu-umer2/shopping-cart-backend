@@ -9,16 +9,16 @@ export class SubCategory {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ default:true })
+  @Prop({ default: true })
   isActive: boolean;
 
   @Prop({ type: Types.ObjectId, ref: 'Category', required: true })
   categoryId: Types.ObjectId;
-  @Prop({ type: Types.ObjectId, ref: 'Product'})
-  ProductsId: Types.ObjectId[];
-  
+  @Prop({ type: Types.ObjectId, ref: 'Product' })
+  productsId: Types.ObjectId[];
 
-  
+
+
 }
 
 export const SubCategorySchema = SchemaFactory.createForClass(SubCategory);

@@ -28,6 +28,7 @@ export class SubCategoriesService {
       name,
       isActive,
       categoryId,
+      productsId: []
     });
 
     await this.categoriesService.addSubCategory(categoryId, newSubCategory._id);

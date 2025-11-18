@@ -3,7 +3,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Product, ProductDocument } from './entities/product.entity';
-import { Model, Types } from 'mongoose';
+import { Model, Types, ObjectId } from 'mongoose';
 import { CategoriesService } from 'src/categories/categories.service';
 import { SubCategoriesService } from 'src/sub-categories/sub-categories.service';
 import { Category, CategoryDocument } from 'src/categories/entities/category.entity';
@@ -18,42 +18,7 @@ export class ProductsService {
     private readonly SubCategoryService: SubCategoriesService,
 
   ) { }
-  // async create(createProductDto: CreateProductDto) {
-  //   const { categoriesId, subCategoriesId, ...rest } = createProductDto
-  //   console.log('cat', createProductDto)
-  //   const category = await this.categoryModel.findById(categoriesId)
-  //   if (!category) {
-  //     throw new NotFoundException('category not found')
-  //   }
 
-
-  //   let subCategory: any = null;
-  //   if (subCategoriesId) {
-  //     subCategory = await this.subCategoryModel.findById(subCategoriesId);
-  //     if (!subCategory) {
-  //       throw new NotFoundException('SubCategory not found');
-  //     }
-  //   }
-
-
-
-
-  //   const product = await this.productModel.create(createProductDto)
-  //   await this.categoryModel.findByIdAndUpdate(
-  //     createProductDto.categoriesId,
-  //     { $push: { productsId: product._id } },
-  //     { new: true }
-  //   );
-
-  //   if (createProductDto.subCategoriesId) {
-  //     await this.subCategoryModel.findByIdAndUpdate(
-  //       createProductDto.subCategoriesId,
-  //       { $push: { productsId: product._id } },
-  //       { new: true }
-  //     );
-  //   }
-  //   return product
-  // }
 
   async create(createProductDto: CreateProductDto) {
     const { categoriesId, subCategoriesId, ...rest } = createProductDto;
@@ -73,12 +38,14 @@ export class ProductsService {
       subCategoriesId,
     });
 
-    await this.categoryModel.findByIdAndUpdate(categoriesId, {
+    await this.categoryModel.findByIdAndUpdate(categoriesId.toString(), {
       $push: { productsId: product._id },
     });
+    console.log('categoriesId', categoriesId)
+    console.log('subCategoriesId', subCategoriesId)
 
     if (subCategoriesId) {
-      await this.subCategoryModel.findByIdAndUpdate(subCategoriesId, {
+      await this.subCategoryModel.findByIdAndUpdate(subCategoriesId.toString(), {
         $push: { productsId: product._id },
       });
     }
@@ -118,6 +85,7 @@ export class ProductsService {
 
 
   async update(id: string, updateProductDto: UpdateProductDto & { removeImages?: string[] }): Promise<ProductDocument> {
+    console.log('updatre', updateProductDto)
     const product = await this.productModel.findById(id).exec();
     if (!product) {
       throw new NotFoundException(`Product with ID "${id}" not found.`);
@@ -141,7 +109,54 @@ export class ProductsService {
       product.imageFiles = product.imageFiles?.filter(img => !updateProductDto.removeImages!.includes(img));
     }
 
-    const { image, imageFiles, removeImages, ...rest } = updateProductDto;
+    // --- CATEGORY ---
+    if (updateProductDto.categoriesId) {
+      const newCategoryId = updateProductDto.categoriesId.toString();
+
+      if (!product.categoriesId || product.categoriesId.toString() !== newCategoryId) {
+
+        // Remove from old category
+        if (product.categoriesId) {
+          await this.categoryModel.findByIdAndUpdate(product.categoriesId.toString(), {
+            $pull: { productsId: product._id },
+          });
+        }
+
+        // Add to new category
+        await this.categoryModel.findByIdAndUpdate(newCategoryId, {
+          $addToSet: { productsId: product._id },
+        });
+
+        product.categoriesId = new Types.ObjectId(newCategoryId);
+      }
+    }
+
+    // --- SUBCATEGORY ---
+    if (updateProductDto.subCategoriesId) {
+      const newSubCategoryId = updateProductDto.subCategoriesId.toString();
+
+      if (!product.subCategoriesId || product.subCategoriesId.toString() !== newSubCategoryId) {
+        // Remove from old subcategory
+        if (product.subCategoriesId) {
+          await this.subCategoryModel.findByIdAndUpdate(
+            product.subCategoriesId.toString(),
+            { $pull: { productsId: product._id } }
+          );
+        }
+
+        // Add to new subcategory
+        await this.subCategoryModel.findByIdAndUpdate(newSubCategoryId, {
+          $addToSet: { productsId: product._id },
+        });
+
+        product.subCategoriesId = new Types.ObjectId(newSubCategoryId);
+      }
+    }
+
+
+
+
+    const { image, imageFiles, removeImages, categoriesId, subCategoriesId, ...rest } = updateProductDto;
     Object.assign(product, rest);
 
     try {

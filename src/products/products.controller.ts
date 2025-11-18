@@ -88,14 +88,21 @@ export class ProductsController {
     @Param('id') id: string,
     @UploadedFiles()
     files: { image?: Express.Multer.File[]; imageFiles?: Express.Multer.File[] },
-    @Body() updateProductDto: UpdateProductDto,
+    @Body() body: any,
   ) {
-    if (files.image && files.image[0]) {
-      updateProductDto.image = files.image[0].filename;
-    }
+    const updateProductDto: UpdateProductDto & { removeImages?: string[] } = {
+      ...body,
+      image: files.image?.[0]?.filename,
+      imageFiles: files.imageFiles?.map((f) => f.filename),
+    };
 
-    if (files.imageFiles && files.imageFiles.length > 0) {
-      updateProductDto.imageFiles = files.imageFiles.map((f) => f.filename);
+    // Convert numeric fields
+    if (updateProductDto.price) updateProductDto.price = Number(updateProductDto.price);
+    if (updateProductDto.stock) updateProductDto.stock = Number(updateProductDto.stock);
+
+    // Parse removeImages if sent as JSON string
+    if (updateProductDto.removeImages && typeof updateProductDto.removeImages === 'string') {
+      updateProductDto.removeImages = JSON.parse(updateProductDto.removeImages);
     }
 
     return this.productsService.update(id, updateProductDto);
