@@ -1,4 +1,4 @@
-import {  IsEnum, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString, IsArray } from 'class-validator';
 import { ObjectId } from 'mongoose';
 import { ProductType } from '../entities/product.entity';
 
@@ -19,7 +19,7 @@ export class CreateProductDto {
   stock?: number;
   @IsOptional()
   @IsString()
-  image?: string; 
+  image?: string;
 
   @IsOptional()
   @IsString()
@@ -37,7 +37,11 @@ export class CreateProductDto {
   @IsNumber()
   ratings?: number;
 
-  @IsNotEmpty()
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  imageFiles?: string[];
+
   @IsOptional()
   review: string;
 
