@@ -18,7 +18,7 @@ export class Product {
   @Prop({ required: true })
   price: number
   @Prop()
-  image: string
+  image?: string
   @Prop()
   review: string
   @Prop()

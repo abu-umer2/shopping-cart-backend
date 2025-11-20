@@ -85,13 +85,14 @@ export class ProductsService {
 
 
   async update(id: string, updateProductDto: UpdateProductDto & { removeImages?: string[] }): Promise<ProductDocument> {
-    console.log('updatre', updateProductDto)
+    console.log('update', updateProductDto)
     const product = await this.productModel.findById(id).exec();
     if (!product) {
       throw new NotFoundException(`Product with ID "${id}" not found.`);
     }
 
     if (updateProductDto.name && updateProductDto.name !== product.name) {
+      console.log('name', updateProductDto.name)
       const existingProduct = await this.productModel.findOne({ name: updateProductDto.name }).exec();
       if (existingProduct && existingProduct._id.toString() !== id) {
         throw new ConflictException('Product with this name already exists.');
@@ -112,7 +113,8 @@ export class ProductsService {
     // --- CATEGORY ---
     if (updateProductDto.categoriesId) {
       const newCategoryId = updateProductDto.categoriesId.toString();
-
+      console.log('newCategoryId', newCategoryId)
+      console.log('product.categoriesId', product.categoriesId)
       if (!product.categoriesId || product.categoriesId.toString() !== newCategoryId) {
 
         // Remove from old category
@@ -134,6 +136,8 @@ export class ProductsService {
     // --- SUBCATEGORY ---
     if (updateProductDto.subCategoriesId) {
       const newSubCategoryId = updateProductDto.subCategoriesId.toString();
+      console.log('newSubCategoryId', newSubCategoryId)
+      console.log('product.subCategoriesId', product.subCategoriesId)
 
       if (!product.subCategoriesId || product.subCategoriesId.toString() !== newSubCategoryId) {
         // Remove from old subcategory
@@ -158,7 +162,7 @@ export class ProductsService {
 
     const { image, imageFiles, removeImages, categoriesId, subCategoriesId, ...rest } = updateProductDto;
     Object.assign(product, rest);
-
+    console.log('pro', product)
     try {
       return await product.save();
     } catch (error) {

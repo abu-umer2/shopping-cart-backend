@@ -90,6 +90,8 @@ export class ProductsController {
     files: { image?: Express.Multer.File[]; imageFiles?: Express.Multer.File[] },
     @Body() body: any,
   ) {
+    files = files || {};
+
     const updateProductDto: UpdateProductDto & { removeImages?: string[] } = {
       ...body,
       image: files.image?.[0]?.filename,
@@ -101,7 +103,7 @@ export class ProductsController {
     if (updateProductDto.stock) updateProductDto.stock = Number(updateProductDto.stock);
 
     // Parse removeImages if sent as JSON string
-    if (updateProductDto.removeImages && typeof updateProductDto.removeImages === 'string') {
+    if (typeof updateProductDto.removeImages === 'string') {
       updateProductDto.removeImages = JSON.parse(updateProductDto.removeImages);
     }
 
